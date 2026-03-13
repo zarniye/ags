@@ -39,9 +39,7 @@ const Header = () => {
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="container flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="logo-box" style={{ width: '40px', height: '40px', background: '#004aad', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyCenter: 'center' }}>
-             <Target className="text-white w-6 h-6" style={{ margin: 'auto' }} />
-          </div>
+          <img src="/logo.svg" alt="AGS Logo" style={{ width: '40px', height: 'auto' }} />
           <span className="logo-text" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#004aad' }}>AGS <span style={{ color: '#ea2e2e' }}>HR</span></span>
         </div>
 
@@ -67,7 +65,10 @@ const Header = () => {
             style={{ position: 'fixed', inset: 0, background: 'white', zIndex: 2000, padding: '2rem' }}
           >
             <div className="flex justify-between items-center mb-12">
-              <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#004aad' }}>AGS HR</span>
+              <div className="flex items-center gap-3">
+                <img src="/logo.svg" alt="AGS Logo" style={{ width: '32px', height: 'auto' }} />
+                <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#004aad' }}>AGS HR</span>
+              </div>
               <button onClick={() => setIsMobileMenuOpen(false)}><X /></button>
             </div>
             <div className="flex flex-col gap-6">
@@ -499,7 +500,7 @@ const Footer = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '3rem', marginBottom: '4rem' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem' }}>
-              <div style={{ width: '32px', height: '32px', background: '#004aad', borderRadius: '6px', display: 'flex' }}><Target size={18} style={{ margin: 'auto', color: 'white' }} /></div>
+              <img src="/logo.svg" alt="AGS Logo" style={{ width: '32px', height: 'auto' }} />
               <span style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>AGS HR</span>
             </div>
             <p style={{ color: '#64748b' }}>Innovative HR solutions for a dynamic world.</p>
