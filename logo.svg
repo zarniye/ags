@@ -1,0 +1,11 @@
+<svg width="200" height="230" viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg">
+  <!-- Blue Triangle Background -->
+  <polygon points="100,10 10,170 190,170" fill="#0073BB" />
+  
+  <!-- White 8-pointed Star -->
+  <path d="M100,45 L108,85 L145,90 L108,95 L100,135 L92,95 L55,90 L92,85 Z" fill="white" />
+  <path d="M100,45 L108,85 L145,90 L108,95 L100,135 L92,95 L55,90 L92,85 Z" fill="white" transform="rotate(45 100 90)" />
+
+  <!-- AGS Text -->
+  <text x="100" y="220" font-family="Times New Roman, Serif" font-size="48" font-weight="bold" fill="#EE1D23" text-anchor="middle" font-style="italic">AGS</text>
+</svg>
