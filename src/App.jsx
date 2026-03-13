@@ -461,10 +461,10 @@ const FAQ = () => {
 
 const Careers = () => {
   const jobs = [
-    { title: "Senior Technical Recruiter", dept: "HR Ops", location: "Remote / New York", type: "Full-time" },
-    { title: "Business Development Manager", dept: "Sales", location: "London, UK", type: "Full-time" },
-    { title: "HR Compliance Specialist", dept: "Legal & HR", location: "Singapore", type: "Contract" },
-    { title: "Talent Acquisition Associate", dept: "HR Ops", location: "Remote / Dubai", type: "Full-time" }
+    { title: "Senior Technical Recruiter", dept: "HR Ops", location: "Remote / Yangon", type: "Full-time" },
+    { title: "Business Development Manager", dept: "Sales", location: "Mandalay, Bago", type: "Full-time" },
+    { title: "HR Compliance Specialist", dept: "Legal & HR", location: "Naypyitaw", type: "Contract" },
+    { title: "Talent Acquisition Associate", dept: "HR Ops", location: "Remote / Yangon", type: "Full-time" }
   ];
 
   return (
@@ -515,7 +515,7 @@ const Contact = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                <div style={{ display: 'flex', gap: '1.5rem' }}>
                   <div style={{ width: '56px', height: '56px', background: 'rgba(255,255,255,0.05)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyCenter: 'center' }}><Phone style={{ margin: 'auto' }} /></div>
-                  <div><h4 style={{ marginBottom: '0.25rem' }}>Call Us</h4><p style={{ color: '#94a3b8' }}>+1 (555) 000-0000</p></div>
+                  <div><h4 style={{ marginBottom: '0.25rem' }}>Call Us</h4><p style={{ color: '#94a3b8' }}>+95 (9) 000-0000</p></div>
                </div>
                <div style={{ display: 'flex', gap: '1.5rem' }}>
                   <div style={{ width: '56px', height: '56px', background: 'rgba(255,255,255,0.05)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyCenter: 'center' }}><Mail style={{ margin: 'auto' }} /></div>
