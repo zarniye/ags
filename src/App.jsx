@@ -39,7 +39,7 @@ const Header = () => {
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="container flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <img src="/logo.svg" alt="AGS Logo" style={{ width: '40px', height: 'auto' }} />
+          <img src="./logo.svg" alt="AGS Logo" style={{ width: '40px', height: 'auto' }} />
           <span className="logo-text" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#004aad' }}>AGS <span style={{ color: '#ea2e2e' }}>HR</span></span>
         </div>
 
@@ -60,23 +60,70 @@ const Header = () => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div 
-            initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
+            initial={{ opacity: 0, x: '100%' }} 
+            animate={{ opacity: 1, x: 0 }} 
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className="mobile-menu"
-            style={{ position: 'fixed', inset: 0, background: 'white', zIndex: 2000, padding: '2rem' }}
+            style={{ 
+              position: 'fixed', 
+              inset: 0, 
+              background: '#ffffff', 
+              zIndex: 2000, 
+              padding: '2.5rem' 
+            }}
           >
-            <div className="flex justify-between items-center mb-12">
+            <div className="flex justify-between items-center mb-16">
               <div className="flex items-center gap-3">
-                <img src="/logo.svg" alt="AGS Logo" style={{ width: '32px', height: 'auto' }} />
-                <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#004aad' }}>AGS HR</span>
+                <img src="./logo.svg" alt="AGS Logo" style={{ width: '40px', height: 'auto' }} />
+                <span style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--primary)', letterSpacing: '-0.02em' }}>AGS <span style={{ color: 'var(--accent)' }}>HR</span></span>
               </div>
-              <button onClick={() => setIsMobileMenuOpen(false)}><X /></button>
+              <button 
+                onClick={() => setIsMobileMenuOpen(false)}
+                style={{ 
+                  background: 'var(--bg-soft)', 
+                  border: 'none', 
+                  borderRadius: '12px', 
+                  width: '44px', 
+                  height: '44px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  color: 'var(--text-main)'
+                }}
+              >
+                <X size={24} />
+              </button>
             </div>
-            <div className="flex flex-col gap-6">
-              {['Home', 'Services', 'About', 'Careers', 'Contact'].map((item) => (
-                <a key={item} href={`#${item.toLowerCase()}`} style={{ fontSize: '1.5rem', fontWeight: 'bold' }} onClick={() => setIsMobileMenuOpen(false)}>
+            
+            <div className="flex flex-col gap-2">
+              {['Home', 'Services', 'About', 'Careers', 'Contact'].map((item, idx) => (
+                <motion.a 
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + idx * 0.1 }}
+                  key={item} 
+                  href={`#${item.toLowerCase()}`} 
+                  style={{ 
+                    fontSize: '2rem', 
+                    fontWeight: '700', 
+                    padding: '1rem 0',
+                    color: 'var(--text-main)',
+                    display: 'block',
+                    borderBottom: '1px solid var(--bg-soft)'
+                  }} 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
                   {item}
-                </a>
+                </motion.a>
               ))}
+            </div>
+
+            <div style={{ marginTop: 'auto', paddingTop: '4rem' }}>
+              <button className="btn btn-primary w-full" style={{ justifyContent: 'center', padding: '1.25rem' }}>
+                Get Talented
+              </button>
             </div>
           </motion.div>
         )}
@@ -175,19 +222,18 @@ const Services = () => {
           <p style={{ color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>We provide a comprehensive suite of HR services designed to help you attract and retain the best talent.</p>
         </div>
 
-        <div className="carousel-container" style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <button className="carousel-btn prev" onClick={prev}><ChevronLeft /></button>
+        <div className="carousel-container">
+          <button className="carousel-btn prev desktop-only" onClick={prev}><ChevronLeft /></button>
           
-          <div className="carousel-window" style={{ flex: 1, overflow: 'hidden' }}>
+          <div className="carousel-window">
             <motion.div 
               className="carousel-track" 
-              animate={{ x: `-${index * (100 / displayCount)}%` }}
+              animate={window.innerWidth > 768 ? { x: `-${index * (100 / displayCount)}%` } : {}}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              style={{ display: 'flex' }}
             >
               {services.map((s, idx) => (
-                <div key={idx} className="carousel-card-wrapper" style={{ minWidth: `${100 / displayCount}%`, padding: '0 0.75rem' }}>
-                  <div className="service-card" style={{ height: '100%', padding: '2rem' }}>
+                <div key={idx} className="carousel-card-wrapper" style={{ minWidth: window.innerWidth > 768 ? `${100 / displayCount}%` : '85%', padding: '0 0.75rem' }}>
+                  <div className="service-card">
                     <div className="icon-box" style={{ width: '56px', height: '56px', marginBottom: '1.5rem', color: idx % 2 === 0 ? '#004aad' : '#ea2e2e' }}>{s.icon}</div>
                     <h3 style={{ marginBottom: '0.75rem', fontSize: '1.25rem' }}>{s.title}</h3>
                     <p style={{ color: '#64748b', marginBottom: '1.5rem', fontSize: '0.95rem', lineHeight: '1.5' }}>{s.desc}</p>
@@ -199,8 +245,7 @@ const Services = () => {
               ))}
             </motion.div>
           </div>
-
-          <button className="carousel-btn next" onClick={next}><ChevronRight /></button>
+          <button className="carousel-btn next desktop-only" onClick={next}><ChevronRight /></button>
         </div>
 
         <div className="carousel-dots" style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '2rem' }}>
@@ -500,7 +545,7 @@ const Footer = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '3rem', marginBottom: '4rem' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem' }}>
-              <img src="/logo.svg" alt="AGS Logo" style={{ width: '32px', height: 'auto' }} />
+              <img src="./logo.svg" alt="AGS Logo" style={{ width: '32px', height: 'auto' }} />
               <span style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>AGS HR</span>
             </div>
             <p style={{ color: '#64748b' }}>Innovative HR solutions for a dynamic world.</p>

@@ -83,12 +83,20 @@ button {
   justify-content: space-between;
 }
 
+.flex-col {
+  flex-direction: column;
+}
+
 .grid {
   display: grid;
 }
 
 .gap-4 {
   gap: 1rem;
+}
+
+.gap-6 {
+  gap: 1.5rem;
 }
 
 .gap-8 {
@@ -101,6 +109,16 @@ button {
 
 .relative {
   position: relative;
+}
+
+.desktop-only {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
 }
 
 .job-type {
@@ -120,30 +138,44 @@ button {
 }
 
 .header.scrolled {
-  background: var(--glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--glass-border);
-  padding: 1rem 0;
-  box-shadow: var(--shadow-sm);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 74, 173, 0.05);
+  padding: 0.8rem 0;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
 }
 
 .nav-links {
   display: flex;
-  gap: 2.5rem;
+  gap: 3rem;
   align-items: center;
 }
 
 .nav-link {
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 500;
   color: var(--text-main);
-  opacity: 0.8;
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  transition: var(--transition);
 }
 
 .nav-link:hover {
   color: var(--primary);
-  opacity: 1;
+}
+
+.nav-link:hover::after {
+  width: 100%;
 }
 
 .mobile-toggle {
@@ -339,8 +371,57 @@ button {
 
 /* Service Cards & Carousel */
 .carousel-container {
-  max-width: 1200px;
-  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.carousel-window {
+  flex: 1;
+  overflow: hidden;
+  padding: 1rem 0;
+}
+
+.carousel-track {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .carousel-container {
+    display: block;
+  }
+
+  .carousel-btn {
+    display: none;
+  }
+
+  .carousel-window {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 1rem 0 3rem;
+  }
+
+  .carousel-window::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel-track {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0 2rem;
+  }
+
+  .carousel-card-wrapper {
+    min-width: 85% !important;
+    scroll-snap-align: center;
+    padding: 0 !important;
+  }
+
+  .service-card {
+    height: 100%;
+    box-shadow: var(--shadow-md);
+  }
 }
 
 .carousel-btn {
@@ -456,7 +537,7 @@ button {
   width: 100%;
   aspect-ratio: 1.1;
   border-radius: 40px;
-  overflow: visible;
+  overflow: hidden;
   box-shadow: var(--shadow-lg);
 }
 
