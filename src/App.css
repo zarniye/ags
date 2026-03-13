@@ -842,6 +842,23 @@ footer {
     text-align: center;
   }
 
+  .hero-content {
+    padding-right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-desc {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-btns,
+  .hero-stats {
+    justify-content: center;
+  }
+
   .hero-visual {
     height: 450px;
     max-width: 600px;
