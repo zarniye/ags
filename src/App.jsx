@@ -558,7 +558,7 @@ const Contact = () => {
             <div className="form-group"><label>Full Name</label><input className="form-input" placeholder="John Doe" /></div>
             <div className="form-group"><label>Email</label><input className="form-input" placeholder="john@example.com" /></div>
             <div className="form-group"><label>Message</label><textarea className="form-input" rows="4" placeholder="How can we help?"></textarea></div>
-            <button className="btn btn-primary w-full btn-send" style={{ padding: '1.25rem', justifyContent: 'center' }}>
+            <button className="btn btn-primary w-full btn-send" style={{ padding: '0.6rem', justifyContent: 'center' }}>
               Send Message <ArrowRight size={20} />
             </button>
           </div>
