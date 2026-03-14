@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import heroImg from './assets/hero.png'
+import { HashRouter as Router, Routes, Route, Link, NavLink, useLocation } from 'react-router-dom'
+import heroImg from './assets/hero.png' // Keeping for potential usage or removing if absolutely certain
 import consultantImg from './assets/consultant.png'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import './App.css'
-import { 
-  Users, 
-  Briefcase, 
-  Target, 
-  CheckCircle2, 
-  ArrowRight, 
-  Award, 
+import {
+  Users,
+  Briefcase,
+  Target,
+  CheckCircle2,
+  ArrowRight,
+  Award,
   ChevronRight,
   ChevronLeft,
   Globe,
@@ -24,48 +25,82 @@ import {
   Facebook,
   Twitter,
   Instagram,
-  Youtube
+  Youtube,
+  Truck,
+  Package,
+  ShieldCheck,
+  Zap,
+  Monitor,
+  Building2,
+  Stethoscope,
+  Cog,
+  BarChart3,
+  Network,
+  Map,
+  ArrowUpRight
 } from 'lucide-react'
+
+const ScrollToTop = () => {
+  const location = useLocation();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+      if (window.AOS) {
+        window.AOS.refresh();
+      }
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [location]);
+  return null;
+};
+
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
-
-      // Section scroll spy
-      const sections = ['home', 'services', 'about', 'values', 'process', 'testimonials', 'faq', 'careers', 'contact'];
-      for (const section of sections) {
-        const el = document.getElementById(section);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 200 && rect.bottom >= 200) {
-            setActiveSection(section);
-            break;
-          }
-        }
-      }
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const navItems = [
+    { label: 'Home', path: '/' },
+    { label: 'Services', path: '/services' },
+    { label: 'About', path: '/about' },
+    { label: 'Group', path: '/group' },
+    { label: 'Contact', path: '/contact' }
+  ];
+
+  const Logo = () => (
+    <Link to="/" className="flex items-center gap-2" onClick={() => window.scrollTo(0, 0)}>
+      <img src="/logo.svg" alt="AGS Logo" style={{ height: '50px', width: 'auto', paddingRight: '0.5rem' }} />
+      <span className="logo-text">AGS <span className="text-accent">HR</span></span>
+    </Link>
+  );
+
   return (
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="container flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <img src="./logo.svg" alt="AGS Logo" style={{ width: '40px', height: 'auto' }} />
-          <span className="logo-text" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#004aad' }}>AGS <span style={{ color: '#ea2e2e' }}>HR</span></span>
-        </div>
+        <Logo />
 
         <nav className="nav-links">
-          {['Home', 'Services', 'About', 'Careers', 'Contact'].map((item) => (
-            <a key={item} href={`#${item.toLowerCase()}`} className={`nav-link ${activeSection === item.toLowerCase() ? 'active' : ''}`}>
-              {item}
-            </a>
+          {navItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+              onClick={() => window.scrollTo(0, 0)}
+            >
+              {item.label}
+            </NavLink>
           ))}
           <button className="btn btn-primary" style={{ padding: '0.6rem 1.5rem', fontSize: '0.85rem' }}>Get Talented</button>
         </nav>
@@ -77,35 +112,32 @@ const Header = () => {
 
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, x: '100%' }} 
-            animate={{ opacity: 1, x: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className="mobile-menu"
-            style={{ 
-              position: 'fixed', 
-              inset: 0, 
-              background: '#ffffff', 
-              zIndex: 2000, 
-              padding: '2.5rem' 
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: '#ffffff',
+              zIndex: 2000,
+              padding: '2.5rem'
             }}
           >
             <div className="flex justify-between items-center mb-16">
-              <div className="flex items-center gap-3">
-                <img src="./logo.svg" alt="AGS Logo" style={{ width: '40px', height: 'auto' }} />
-                <span style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--primary)', letterSpacing: '-0.02em' }}>AGS <span style={{ color: 'var(--accent)' }}>HR</span></span>
-              </div>
-              <button 
+              <Logo />
+              <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                style={{ 
-                  background: 'var(--bg-soft)', 
-                  border: 'none', 
-                  borderRadius: '12px', 
-                  width: '44px', 
-                  height: '44px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
+                style={{
+                  background: 'var(--bg-soft)',
+                  border: 'none',
+                  borderRadius: '12px',
+                  width: '44px',
+                  height: '44px',
+                  display: 'flex',
+                  alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
                   color: 'var(--text-main)'
@@ -114,27 +146,33 @@ const Header = () => {
                 <X size={24} />
               </button>
             </div>
-            
+
             <div className="flex flex-col gap-2">
-              {['Home', 'Services', 'About', 'Careers', 'Contact'].map((item, idx) => (
-                <motion.a 
+              {navItems.map((item, idx) => (
+                <motion.div
+                  key={item.path}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 + idx * 0.1 }}
-                  key={item} 
-                  href={`#${item.toLowerCase()}`} 
-                  style={{ 
-                    fontSize: '2rem', 
-                    fontWeight: '700', 
-                    padding: '1rem 0',
-                    color: activeSection === item.toLowerCase() ? 'var(--primary)' : 'var(--text-main)',
-                    display: 'block',
-                    borderBottom: '1px solid var(--bg-soft)'
-                  }} 
-                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  {item}
-                </motion.a>
+                  <NavLink
+                    to={item.path}
+                    style={({ isActive }) => ({
+                      fontSize: '2rem',
+                      fontWeight: '700',
+                      padding: '1rem 0',
+                      color: isActive ? 'var(--primary)' : 'var(--text-main)',
+                      display: 'block',
+                      borderBottom: '1px solid var(--bg-soft)'
+                    })}
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      window.scrollTo(0, 0);
+                    }}
+                  >
+                    {item.label}
+                  </NavLink>
+                </motion.div>
               ))}
             </div>
 
@@ -147,6 +185,60 @@ const Header = () => {
         )}
       </AnimatePresence>
     </header>
+  );
+};
+
+const IndustryFocus = () => {
+  const industries = [
+    { name: "Technology", icon: <Monitor />, desc: "From startups to tech giants, we source world-class engineering talent." },
+    { name: "Finance", icon: <Building2 />, desc: "Connecting financial institutions with top-tier analysts and leaders." },
+    { name: "Healthcare", icon: <Stethoscope />, desc: "Expert staffing for healthcare providers and medical tech firms." },
+    { name: "Manufacturing", icon: <Cog />, desc: "Strategic talent solutions for modern industrial operations." }
+  ];
+
+  return (
+    <section className="section industry-focus">
+      <div className="container">
+        <div style={{ textAlign: 'center', marginBottom: '4rem' }} data-aos="fade-up">
+          <span className="badge">Our Reach</span>
+          <h2 style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Industries We Empower</h2>
+          <p style={{ color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>Deep expertise across specialized sectors ensures the perfect fit for your unique needs.</p>
+        </div>
+        <div className="industry-grid">
+          {industries.map((ind, idx) => (
+            <div key={idx} className="industry-card" data-aos="fade-up" data-aos-delay={idx * 150}>
+              <div className="industry-icon">{ind.icon}</div>
+              <h3>{ind.name}</h3>
+              <p>{ind.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const ImpactStats = () => {
+  const stats = [
+    { label: "Talent Placed", value: "12k+" },
+    { label: "Client Retainment", value: "98%" },
+    { label: "Global Network", value: "50+" },
+    { label: "Experience", value: "15Y" }
+  ];
+
+  return (
+    <section className="section impact-stats" style={{ background: '#004aad', color: 'white' }}>
+      <div className="container">
+        <div className="stats-row">
+          {stats.map((s, idx) => (
+            <div key={idx} className="stat-box" data-aos="zoom-in" data-aos-delay={idx * 100}>
+              <div className="stat-number">{s.value}</div>
+              <div className="stat-desc">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 };
 
@@ -163,8 +255,8 @@ const Hero = () => {
                 AGS HR specializes in connecting top-tier talent with world-class organizations. We streamline recruitment, specialized staffing, and expert HR consulting.
               </p>
               <div className="hero-btns">
-                <button className="btn btn-primary">Find Your Next Hire <ArrowRight size={18} /></button>
-                <button className="btn btn-secondary">Explore Services</button>
+                <Link to="/contact" className="btn btn-primary" onClick={() => window.scrollTo(0, 0)}>Find Your Next Hire <ArrowRight size={18} /></Link>
+                <Link to="/services" className="btn btn-secondary" onClick={() => window.scrollTo(0, 0)}>Explore Services</Link>
               </div>
             </motion.div>
 
@@ -180,24 +272,88 @@ const Hero = () => {
             </motion.div>
           </div>
 
-          <motion.div initial={{ opacity: 0, scale: 0.8, x: 100 }} animate={{ opacity: 1, scale: 1, x: 0 }} transition={{ delay: 0.3, duration: 1.2 }} className="hero-visual">
-            <img src={heroImg} alt="Business Meeting" className="visual-bg" />
-            <div className="visual-overlay"></div>
-            
-            <div className="visual-grid">
-              {[
-                { icon: <Users />, label: 'Recruitment', color: '#ea2e2e' },
-                { icon: <Briefcase />, label: 'Consulting', color: '#ffffff' },
-                { icon: <Award />, label: 'Staffing', color: '#ffffff' },
-                { icon: <Target />, label: 'Strategy', color: '#ea2e2e' }
-              ].map((item, idx) => (
-                <div key={idx} className="visual-card">
-                  <div className="visual-icon" style={{ color: item.color }}>{item.icon}</div>
-                  <span className="visual-label">{item.label}</span>
-                </div>
-              ))}
-            </div>
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            transition={{ delay: 0.3, duration: 1.2 }} 
+            className="floating-stage"
+          >
+            {/* Main Highlight Cards */}
+            <motion.div 
+              className="glass-card element-1"
+              animate={{ y: [0, -25, 0], rotate: [0, 2, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <div className="icon-box bg-accent"><Users size={20} /></div>
+              <div>
+                <span className="block text-[10px] uppercase tracking-tighter opacity-50">Talent Pool</span>
+                <span className="block font-bold text-sm">12k+ Experts</span>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              className="glass-card element-2"
+              animate={{ y: [0, 30, 0], rotate: [0, -2, 0] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            >
+              <div className="icon-box bg-primary"><Briefcase size={20} /></div>
+              <span className="font-bold text-sm">Strategic Consulting</span>
+            </motion.div>
+
+            <motion.div 
+              className="glass-card element-3"
+              animate={{ y: [0, -15, 0], scale: [1, 1.05, 1] }}
+              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+            >
+              <div className="icon-box bg-white text-accent shadow-sm"><Target size={20} /></div>
+              <span className="font-bold text-sm">Global Hiring</span>
+            </motion.div>
+
+            {/* Floating Icons */}
+            <motion.div className="floating-icon i1" animate={{ y: [0, -40, 0], opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 10, repeat: Infinity }}>
+              <Globe size={40} strokeWidth={1} />
+            </motion.div>
+            <motion.div className="floating-icon i2" animate={{ y: [0, 30, 0], opacity: [0.2, 0.5, 0.2] }} transition={{ duration: 12, repeat: Infinity, delay: 2 }}>
+              <Award size={32} strokeWidth={1} />
+            </motion.div>
+            <motion.div className="floating-icon i3" animate={{ x: [0, 20, 0], y: [0, -20, 0] }} transition={{ duration: 9, repeat: Infinity }}>
+              <Zap size={24} strokeWidth={1} />
+            </motion.div>
+
+            {/* Abstract Shapes */}
+            <div className="abstract-shape s1"></div>
+            <div className="abstract-shape s2"></div>
+            <div className="abstract-shape s3"></div>
           </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const EngagementModels = () => {
+  const models = [
+    { title: "Retained Search", desc: "Exclusive search for high-level executive roles with a dedicated consulting team.", color: "#004aad" },
+    { title: "Contingent Staffing", desc: "Flexible staffing solutions for rapid scaling and project-based needs.", color: "#ea2e2e" },
+    { title: "Permanent Placement", desc: "Long-term team building with a focus on cultural and technical alignment.", color: "#004aad" }
+  ];
+
+  return (
+    <section className="section engagement-models">
+      <div className="container">
+        <div style={{ textAlign: 'center', marginBottom: '4rem' }} data-aos="fade-up">
+          <span className="badge">Flexible Engagement</span>
+          <h2 style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>How We Work Together</h2>
+        </div>
+        <div className="models-grid">
+          {models.map((m, idx) => (
+            <div key={idx} className="model-card" data-aos="fade-up" data-aos-delay={idx * 200}>
+              <div className="model-indicator" style={{ background: m.color }}></div>
+              <h3>{m.title}</h3>
+              <p>{m.desc}</p>
+              <Link to="/contact" className="btn-text" style={{ color: m.color }}>Learn More <ArrowUpRight size={16} /></Link>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -242,8 +398,8 @@ const Services = () => {
 
         <div className="carousel-container" data-aos="fade-up" data-aos-delay="200">
           <button className="carousel-btn prev desktop-only" onClick={prev}><ChevronLeft /></button>
-          
-          <div 
+
+          <div
             className="carousel-window"
             onScroll={(e) => {
               if (window.innerWidth <= 768) {
@@ -256,8 +412,8 @@ const Services = () => {
               }
             }}
           >
-            <motion.div 
-              className="carousel-track" 
+            <motion.div
+              className="carousel-track"
               animate={window.innerWidth > 768 ? { x: `-${index * (100 / displayCount)}%` } : {}}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
@@ -280,9 +436,9 @@ const Services = () => {
 
         <div className="carousel-dots" style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '2rem' }}>
           {Array.from({ length: maxIndex + 1 }).map((_, idx) => (
-            <button 
-              key={idx} 
-              className={`dot ${index === idx ? 'active' : ''}`} 
+            <button
+              key={idx}
+              className={`dot ${index === idx ? 'active' : ''}`}
               onClick={() => setIndex(idx)}
               style={{ width: '8px', height: '8px', borderRadius: '50%', border: 'none', background: index === idx ? '#004aad' : '#cbd5e1', cursor: 'pointer', transition: 'var(--transition)' }}
             />
@@ -389,23 +545,23 @@ const Process = () => {
 
 const Testimonials = () => {
   const reviews = [
-    { 
-      text: "AGS HR transformed our engineering team. Their vetting process is unlike anything we've seen before.", 
-      author: "Sarah Jenkins", 
-      role: "CTO, TechFlow Inc.", 
-      image: "https://i.pravatar.cc/100?u=40" 
+    {
+      text: "AGS HR transformed our engineering team. Their vetting process is unlike anything we've seen before.",
+      author: "Sarah Jenkins",
+      role: "CTO, TechFlow Inc.",
+      image: "https://i.pravatar.cc/100?u=40"
     },
-    { 
-      text: "Professional, efficient, and deeply connected. They found our CEO in record time.", 
-      author: "Michael Chen", 
-      role: "Board Member, Global Logistics", 
-      image: "https://i.pravatar.cc/100?u=41" 
+    {
+      text: "Professional, efficient, and deeply connected. They found our CEO in record time.",
+      author: "Michael Chen",
+      role: "Board Member, Global Logistics",
+      image: "https://i.pravatar.cc/100?u=41"
     },
-    { 
-      text: "The consultants at AGS are experts in their field. They provided invaluable strategic advice.", 
-      author: "Emma Rodriguez", 
-      role: "HR Director, Creative Pulse", 
-      image: "https://i.pravatar.cc/100?u=42" 
+    {
+      text: "The consultants at AGS are experts in their field. They provided invaluable strategic advice.",
+      author: "Emma Rodriguez",
+      role: "HR Director, Creative Pulse",
+      image: "https://i.pravatar.cc/100?u=42"
     }
   ];
 
@@ -439,43 +595,55 @@ const FAQ = () => {
   const [openIdx, setOpenIdx] = useState(0);
 
   const faqs = [
-    { q: "What industries do you specialize in?", a: "We specialize in Technology, Executive Search, Manufacturing, and Financial Services across the globe." },
-    { q: "How long does the typical recruitment process take?", a: "Depending on the role complexity, we typically present a shortlist of vetted candidates within 7-14 business days." },
-    { q: "Do you offer post-placement support?", a: "Absolutely. We follow up with both the client and the candidate for 6 months to ensure a perfect long-term fit." },
-    { q: "What sets AGS HR apart from other firms?", a: "Our proprietary AI-driven vetting and our deep horizontal expertise in specialized staffing since 2011." }
+    {
+      q: "What industries do you specialize in?",
+      a: "Our core expertise lies in Technology, Finance, Healthcare, and Manufacturing. We have a dedicated team for Each sector to ensure we find the top 1% of talent across the globe."
+    },
+    {
+      q: "How long does the recruitment process take?",
+      a: "For permanent placements, we typically present a shortlisted selection of vetted candidates within 5-10 business days. We prioritize quality and culture-fit over mere speed."
+    },
+    {
+      q: "Do you offer cross-border staffing solutions?",
+      a: "Yes, our Global Presence allows us to provide seamless cross-border recruitment and relocation support, ensuring compliance with local labor laws and taxation."
+    },
+    {
+      q: "What sets AGS HR apart from other firms?",
+      a: "Our unique synergy with our sister companies in Tech and Logistics provides us with a proprietary AI-powered vetting system and a level of operational support that traditional firms cannot match."
+    }
   ];
-  const questions = [
-    { q: "What industries do you specialize in?", a: "We have deep expertise in Technology, Finance, Healthcare, and Creative industries, but our methodology works across all sectors." },
-    { q: "How long does the typical recruitment process take?", a: "Placement times vary, but typically it takes 2-4 weeks for permanent roles and 48-72 hours for temporary staffing needs." },
-    { q: "Do you offer post-placement support?", a: "Yes, we provide 90-day retention support for all permanent placements to ensure a smooth transition for both client and candidate." }
-  ];
+  // const questions = [
+  //   { q: "What industries do you specialize in?", a: "We have deep expertise in Technology, Finance, Healthcare, and Creative industries, but our methodology works across all sectors." },
+  //   { q: "How long does the typical recruitment process take?", a: "Placement times vary, but typically it takes 2-4 weeks for permanent roles and 48-72 hours for temporary staffing needs." },
+  //   { q: "Do you offer post-placement support?", a: "Yes, we provide 90-day retention support for all permanent placements to ensure a smooth transition for both client and candidate." }
+  // ];
 
   return (
-    <section id="faq" className="section" style={{ background: '#fff' }}>
+    <section id="faq" className="section" style={{ background: '#020617', color: 'white', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
       <div className="container">
         <div style={{ textAlign: 'center', marginBottom: '4rem' }} data-aos="fade-up">
-          <span className="badge">Questions?</span>
-          <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Frequently Asked Questions</h2>
+          <span className="badge" style={{ background: 'rgba(234, 46, 46, 0.2)', color: '#ff5f5f' }}>Questions?</span>
+          <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: 'white' }}>Frequently Asked Questions</h2>
         </div>
         <div className="faq-list" data-aos="fade-up" data-aos-delay="200">
           {faqs.map((item, idx) => (
-            <div key={idx} className="faq-item">
-              <button className="faq-question" onClick={() => setOpenIdx(openIdx === idx ? -1 : idx)}>
+            <div key={idx} className="faq-item" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+              <button className="faq-question" style={{ color: 'white' }} onClick={() => setOpenIdx(openIdx === idx ? -1 : idx)}>
                 {item.q}
-                <motion.span animate={{ rotate: openIdx === idx ? 180 : 0 }} transition={{ duration: 0.3 }}>
+                <motion.span animate={{ rotate: openIdx === idx ? 180 : 0 }} transition={{ duration: 0.3 }} style={{ color: 'var(--accent)' }}>
                   <ChevronRight size={20} />
                 </motion.span>
               </button>
               <AnimatePresence>
                 {openIdx === idx && (
-                  <motion.div 
+                  <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                     style={{ overflow: 'hidden' }}
                   >
-                    <div className="faq-answer">
+                    <div className="faq-answer" style={{ color: '#94a3b8' }}>
                       {item.a}
                     </div>
                   </motion.div>
@@ -489,43 +657,161 @@ const FAQ = () => {
   );
 };
 
-const Careers = () => {
-  const jobs = [
-    { title: "Senior Technical Recruiter", dept: "HR Ops", location: "Remote / Yangon", type: "Full-time" },
-    { title: "Business Development Manager", dept: "Sales", location: "Mandalay, Bago", type: "Full-time" },
-    { title: "HR Compliance Specialist", dept: "Legal & HR", location: "Naypyitaw", type: "Contract" },
-    { title: "Talent Acquisition Associate", dept: "HR Ops", location: "Remote / Yangon", type: "Full-time" }
+const COMPANY_PROFILES = {
+  logistics: {
+    name: "AGS Logistics",
+    tagline: "Global Supply Chain Reimagined",
+    desc: "AGS Logistics provides end-to-end supply chain solutions, leveraging advanced technology and a global network to ensure your freight reaches its destination safely and on time.",
+    color: "#004aad",
+    icon: <Globe />,
+    services: [
+      { title: "Ocean Freight", desc: "Reliable and cost-effective sea transport solutions for global trade.", icon: <Globe size={20} /> },
+      { title: "Land Transport", desc: "Efficient trucking and rail services across borders.", icon: <Truck size={20} /> },
+      { title: "Warehousing", desc: "Smart storage solutions with real-time inventory tracking.", icon: <Package size={20} /> },
+      { title: "Customs Clearance", desc: "Hassle-free documentation and compliance management.", icon: <ShieldCheck size={20} /> }
+    ],
+    stats: [
+      { label: "Global Offices", value: "24" },
+      { label: "Vessels Managed", value: "150+" },
+      { label: "Countries Served", value: "45" }
+    ]
+  },
+  tech: {
+    name: "AGS Tech",
+    tagline: "Building the Digital Future",
+    desc: "AGS Tech is a cutting-edge software house specializing in custom enterprise solutions, AI integration, and digital transformation strategies that propel businesses into the next era.",
+    color: "#ea2e2e",
+    icon: <Target />,
+    services: [
+      { title: "Web Development", desc: "High-performance, scalable web applications built for speed.", icon: <Zap size={20} /> },
+      { title: "AI Solutions", desc: "Custom machine learning models to automate and optimize workflows.", icon: <Target size={20} /> },
+      { title: "Cloud Security", desc: "Military-grade encryption and security for your digital assets.", icon: <ShieldCheck size={20} /> },
+      { title: "Mobile Apps", desc: "Stunning iOS and Android experiences for the modern user.", icon: <Users size={20} /> }
+    ],
+    stats: [
+      { label: "Projects Completed", value: "300+" },
+      { label: "Tech Stack Experts", value: "85" },
+      { label: "Client Satisfaction", value: "99%" }
+    ]
+  }
+};
+
+const CompanyProfileModal = ({ type, isOpen, onClose }) => {
+  if (!type) return null;
+  const company = COMPANY_PROFILES[type];
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="modal-overlay"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ y: 50, opacity: 0, scale: 0.9 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: 50, opacity: 0, scale: 0.9 }}
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="modal-close" onClick={onClose}><X /></button>
+
+            <div className="modal-header">
+              <div className="modal-company-icon" style={{ background: `${company.color}15`, color: company.color }}>
+                {company.icon}
+              </div>
+              <div className="modal-header-text">
+                <span className="badge" style={{ marginBottom: '0.5rem', background: `${company.color}15`, color: company.color }}>{company.tagline}</span>
+                <h2>{company.name}</h2>
+              </div>
+            </div>
+
+            <div className="modal-body">
+              <div className="modal-about">
+                <h3>About the Company</h3>
+                <p>{company.desc}</p>
+              </div>
+
+              <div className="modal-services-section">
+                <h3>Core Services</h3>
+                <div className="modal-services-grid">
+                  {company.services.map((s, idx) => (
+                    <div key={idx} className="modal-service-card">
+                      <div className="modal-service-icon" style={{ color: company.color }}>{s.icon}</div>
+                      <div>
+                        <h4>{s.title}</h4>
+                        <p>{s.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="modal-footer-stats">
+                {company.stats.map((s, idx) => (
+                  <div key={idx} className="modal-stat">
+                    <span className="stat-value" style={{ color: company.color }}>{s.value}</span>
+                    <span className="stat-label">{s.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="modal-cta">
+              <button className="btn btn-primary" style={{ background: company.color, width: '100%', justifyContent: 'center' }}>
+                Contact {company.name} Team
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const RelatedCompanies = ({ onOpenProfile }) => {
+  const companies = [
+    {
+      id: 'logistics',
+      name: "AGS Logistics",
+      desc: "Comprehensive supply chain solutions and global freight forwarding expertise.",
+      icon: <Globe />,
+      color: "#004aad"
+    },
+    {
+      id: 'tech',
+      name: "AGS Tech",
+      desc: "Innovative software development and digital transformation for modern enterprises.",
+      icon: <Target />,
+      color: "#ea2e2e"
+    }
   ];
 
   return (
-    <section id="careers" className="section">
+    <section id="related-companies" className="section" style={{ background: '#f8fafc' }}>
       <div className="container">
-        <div style={{ textAlign: 'center', marginBottom: '5rem' }} data-aos="fade-up">
-          <span className="badge">Join Our Team</span>
-          <h2 style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Build Your Career with <span style={{ color: '#004aad' }}>AGS HR</span></h2>
-          <p style={{ color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>We're looking for passionate individuals to help us bridge the gap between global talent and opportunity.</p>
+        <div style={{ textAlign: 'center', marginBottom: '4rem' }} data-aos="fade-up">
+          <span className="badge">Our Group</span>
+          <h2 style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Related Companies</h2>
+          <p style={{ color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>Explore our sister concerns that complement our HR expertise with specialized industry solutions.</p>
         </div>
 
-        <div className="jobs-list">
-          {jobs.map((job, idx) => (
-            <div key={idx} className="job-card" data-aos="fade-up" data-aos-delay={idx * 100}>
-              <div className="job-info">
-                <h3>{job.title}</h3>
-                <div className="job-meta">
-                  <span className="job-tag">{job.dept}</span>
-                  <span className="job-location"><MapPin size={14} /> {job.location}</span>
-                  <span className="job-type">{job.type}</span>
-                </div>
+        <div className="related-grid">
+          {companies.map((company, idx) => (
+            <div key={idx} className="company-card" data-aos="fade-up" data-aos-delay={idx * 200}>
+              <div className="company-icon" style={{ background: `${company.color}15`, color: company.color }}>
+                {company.icon}
               </div>
-              <button className="btn btn-secondary" style={{ padding: '0.75rem 1.5rem' }}>Apply Now</button>
+              <h3>{company.name}</h3>
+              <p>{company.desc}</p>
+              <button className="btn-text" onClick={() => onOpenProfile(company.id)}>
+                View Full Profile <ArrowRight size={16} />
+              </button>
             </div>
           ))}
-        </div>
-
-        <div className="talent-pool-cta" data-aos="zoom-in" data-aos-delay="200">
-          <h3>Don't see a role for you?</h3>
-          <p>Join our talent network to stay updated on future opportunities.</p>
-          <button className="btn btn-primary">Join Talent Pool</button>
         </div>
       </div>
     </section>
@@ -538,19 +824,19 @@ const Contact = () => {
       <div className="container">
         <div className="contact-grid">
           <div data-aos="fade-right">
-            <span className="badge" style={{ background: 'rgba(234, 46, 46, 0.2)', color: '#ff5f5f' }}>Contact Us</span>
+            <span className="badge" style={{ background: 'var(--primary-light)', color: 'var(--primary)' }}>Contact Us</span>
             <h2 style={{ fontSize: '3rem', marginBottom: '2rem' }}>Ready to Transform Your Workforce?</h2>
-            <p style={{ color: '#94a3b8', fontSize: '1.1rem', marginBottom: '3rem' }}>Our team is ready to help you navigate modern HR complexities.</p>
-            
+            <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '3rem' }}>Our team is ready to help you navigate modern HR complexities.</p>
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-               <div style={{ display: 'flex', gap: '1.5rem' }}>
-                  <div style={{ width: '56px', height: '56px', background: 'rgba(255,255,255,0.05)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyCenter: 'center' }}><Phone style={{ margin: 'auto' }} /></div>
-                  <div><h4 style={{ marginBottom: '0.25rem' }}>Call Us</h4><p style={{ color: '#94a3b8' }}>+95 (9) 000-0000</p></div>
-               </div>
-               <div style={{ display: 'flex', gap: '1.5rem' }}>
-                  <div style={{ width: '56px', height: '56px', background: 'rgba(255,255,255,0.05)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyCenter: 'center' }}><Mail style={{ margin: 'auto' }} /></div>
-                  <div><h4 style={{ marginBottom: '0.25rem' }}>Email Us</h4><p style={{ color: '#94a3b8' }}>info@agshr.com</p></div>
-               </div>
+              <div style={{ display: 'flex', gap: '1.5rem' }}>
+                <div style={{ width: '56px', height: '56px', background: 'white', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', color: 'var(--primary)' }}><Phone style={{ margin: 'auto' }} /></div>
+                <div><h4 style={{ marginBottom: '0.25rem' }}>Call Us</h4><p style={{ color: 'var(--text-muted)' }}>+95 (9) 000-0000</p></div>
+              </div>
+              <div style={{ display: 'flex', gap: '1.5rem' }}>
+                <div style={{ width: '56px', height: '56px', background: 'white', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', color: 'var(--primary)' }}><Mail style={{ margin: 'auto' }} /></div>
+                <div><h4 style={{ marginBottom: '0.25rem' }}>Email Us</h4><p style={{ color: 'var(--text-muted)' }}>info@agshr.com</p></div>
+              </div>
             </div>
           </div>
 
@@ -570,26 +856,152 @@ const Contact = () => {
 
 const Footer = () => {
   return (
-    <footer>
+    <footer style={{ background: 'var(--bg-soft)', borderTop: '1px solid #e2e8f0', padding: '5rem 0 2rem' }}>
       <div className="container">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '3rem', marginBottom: '4rem' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem' }}>
-              <img src="./logo.svg" alt="AGS Logo" style={{ width: '32px', height: 'auto' }} />
-              <span style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>AGS HR</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '2rem' }}>
+              <img src="/logo.svg" alt="AGS Logo" style={{ height: '40px', width: 'auto', paddingRight: '0.5rem' }} />
+              <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--primary)', marginLeft: '-8px' }}>
+                <span className="logo-text">AGS <span className="text-accent">HR</span></span>
+              </span>
             </div>
-            <p style={{ color: '#64748b' }}>Innovative HR solutions for a dynamic world.</p>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: '1.7' }}>
+              Leading HR consulting firm specializing in global recruitment and executive search since 2011.
+            </p>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <a href="#" style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', transition: 'var(--transition)' }}><Facebook size={18} /></a>
+              <a href="#" style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', transition: 'var(--transition)' }}><Linkedin size={18} /></a>
+              <a href="#" style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', transition: 'var(--transition)' }}><Twitter size={18} /></a>
+            </div>
           </div>
-          <div><h4 style={{ marginBottom: '1.5rem' }}>Company</h4><a href="#" style={{ display: 'block', marginBottom: '0.5rem', color: '#64748b' }}>About</a><a href="#" style={{ display: 'block', color: '#64748b' }}>Careers</a></div>
-          <div><h4 style={{ marginBottom: '1.5rem' }}>Legal</h4><a href="#" style={{ display: 'block', marginBottom: '0.5rem', color: '#64748b' }}>Privacy</a><a href="#" style={{ display: 'block', color: '#64748b' }}>Terms</a></div>
+
+          <div>
+            <h4 style={{ marginBottom: '2rem', color: 'var(--text-main)' }}>Services</h4>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              <li style={{ marginBottom: '1rem' }}><NavLink to="/services" style={{ color: 'var(--text-muted)' }}>Executive Search</NavLink></li>
+              <li style={{ marginBottom: '1rem' }}><NavLink to="/services" style={{ color: 'var(--text-muted)' }}>Staffing Solutions</NavLink></li>
+              <li style={{ marginBottom: '1rem' }}><NavLink to="/services" style={{ color: 'var(--text-muted)' }}>HR Consulting</NavLink></li>
+              <li style={{ marginBottom: '1rem' }}><NavLink to="/services" style={{ color: 'var(--text-muted)' }}>Payroll Outsourcing</NavLink></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 style={{ marginBottom: '2rem', color: 'var(--text-main)' }}>Quick Links</h4>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              <li style={{ marginBottom: '1rem' }}><NavLink to="/" style={{ color: 'var(--text-muted)' }} onClick={() => window.scrollTo(0, 0)}>Home</NavLink></li>
+              <li style={{ marginBottom: '1rem' }}><NavLink to="/about" style={{ color: 'var(--text-muted)' }} onClick={() => window.scrollTo(0, 0)}>About Us</NavLink></li>
+              <li style={{ marginBottom: '1rem' }}><NavLink to="/group" style={{ color: 'var(--text-muted)' }} onClick={() => window.scrollTo(0, 0)}>AGS Group</NavLink></li>
+              <li style={{ marginBottom: '1rem' }}><NavLink to="/contact" style={{ color: 'var(--text-muted)' }} onClick={() => window.scrollTo(0, 0)}>Contact</NavLink></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 style={{ marginBottom: '2rem', color: 'var(--text-main)' }}>Contact Us</h4>
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', alignItems: 'flex-start' }}>
+              <MapPin size={18} style={{ color: 'var(--primary)', marginTop: '4px' }} />
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>No. 123, Dynamic Tower,<br />Yangon, Myanmar</p>
+            </div>
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', alignItems: 'center' }}>
+              <Phone size={18} style={{ color: 'var(--primary)' }} />
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>+95 9 123 456 789</p>
+            </div>
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+              <Mail size={18} style={{ color: 'var(--primary)' }} />
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>info@agshr.com</p>
+            </div>
+          </div>
         </div>
-        <div style={{ paddingTop: '2rem', borderTop: '1px solid #f1f5f9', textAlign: 'center', color: '#64748b', fontSize: '0.85rem' }}>© 2026 AGS HR Solutions. All rights reserved.</div>
+        
+        <div style={{ paddingTop: '2.5rem', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>© 2026 AGS HR Solutions. All rights reserved.</p>
+          <div style={{ display: 'flex', gap: '2rem' }}>
+            <a href="#" style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Privacy Policy</a>
+            <a href="#" style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Terms of Service</a>
+          </div>
+        </div>
       </div>
     </footer>
   );
 };
 
+const GroupSynergy = () => {
+  return (
+    <section className="section group-synergy">
+      <div className="container">
+        <div className="synergy-grid">
+          <div data-aos="fade-right">
+            <span className="badge">Group Synergy</span>
+            <h2 style={{ fontSize: '3rem', marginBottom: '2rem' }}>Total Business <span>Solutions</span></h2>
+            <p style={{ color: '#64748b', fontSize: '1.1rem', marginBottom: '2rem' }}>
+              AGS HR is part of a larger ecosystem. Our sister companies in Logistics and Tech allow us to provide unique, integrated value that other HR firms simply can't match.
+            </p>
+            <div className="synergy-points">
+              <div className="synergy-point">
+                <div className="synergy-icon"><Network /></div>
+                <div>
+                  <h4>Integrated Expertise</h4>
+                  <p>HR knowledge backed by deep logistical and technical understanding.</p>
+                </div>
+              </div>
+              <div className="synergy-point">
+                <div className="synergy-icon"><Zap /></div>
+                <div>
+                  <h4>Rapid Deployment</h4>
+                  <p>Our tech arm ensures we use the best internal tools for talent discovery.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="synergy-visual" data-aos="zoom-in" data-aos-delay="200">
+            <div className="synergy-circle main">AGS HR</div>
+            <div className="synergy-circle top">Tech</div>
+            <div className="synergy-circle bottom">Logistics</div>
+            <div className="synergy-line line-1"></div>
+            <div className="synergy-line line-2"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const GlobalPresence = () => {
+  const hubs = [
+    { city: "Yangon", country: "Myanmar", role: "HQ & Regional Hub" },
+    { city: "Singapore", country: "Singapore", role: "Tech & Strategic Ops" },
+    { city: "Bangkok", country: "Thailand", role: "Logistics Center" },
+    { city: "Dubai", country: "UAE", role: "EMEA Partner Network" }
+  ];
+
+  return (
+    <section className="section global-presence" style={{ background: '#020617', color: 'white' }}>
+      <div className="container">
+        <div className="global-grid">
+          <div data-aos="fade-right">
+            <h2 style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Global Presence</h2>
+            <p style={{ color: '#94a3b8', fontSize: '1.1rem' }}>Supporting your international ambitions with local expertise in key markets.</p>
+          </div>
+          <div className="hubs-grid">
+            {hubs.map((h, idx) => (
+              <div key={idx} className="hub-card" data-aos="fade-up" data-aos-delay={idx * 150}>
+                <div className="hub-icon"><Map size={24} /></div>
+                <div>
+                  <h4>{h.city}, {h.country}</h4>
+                  <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>{h.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 function App() {
+  const [selectedProfile, setSelectedProfile] = useState(null);
+
   useEffect(() => {
     AOS.init({
       duration: 1500,
@@ -600,20 +1012,60 @@ function App() {
   }, []);
 
   return (
-    <div className="app-root">
-      <Header />
-      <Hero />
-      <Services />
-      <About />
-      <Values />
-      <Process />
-      <Testimonials />
-      <FAQ />
-      <Careers />
-      <Contact />
-      <Footer />
-    </div>
-  )
+    <Router>
+      <ScrollToTop />
+      <div className="app-root">
+        <Header />
+        <main>
+          <Routes>
+            <Route path="/" element={
+              <>
+                <Hero />
+                <ImpactStats />
+                <IndustryFocus />
+              </>
+            } />
+            <Route path="/services" element={
+              <>
+                <Services />
+                <EngagementModels />
+              </>
+            } />
+            <Route path="/about" element={
+              <>
+                <About />
+                <Values />
+                <Process />
+                <Testimonials />
+              </>
+            } />
+            <Route path="/group" element={
+              <>
+                <RelatedCompanies onOpenProfile={setSelectedProfile} />
+                <GroupSynergy />
+                <GlobalPresence />
+              </>
+            } />
+            <Route path="/contact" element={
+              <>
+                <Contact />
+                <FAQ />
+              </>
+            } />
+          </Routes>
+        </main>
+        <Footer />
+
+        {selectedProfile && (
+          <CompanyProfileModal
+            type={selectedProfile}
+            isOpen={!!selectedProfile}
+            onClose={() => setSelectedProfile(null)}
+          />
+        )}
+      </div>
+    </Router>
+  );
 }
 
-export default App
+export default App;
