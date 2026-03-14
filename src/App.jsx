@@ -81,7 +81,7 @@ const Header = () => {
 
   const Logo = () => (
     <Link to="/" className="flex items-center gap-2" onClick={() => window.scrollTo(0, 0)}>
-      <img src="/logo.svg" alt="AGS Logo" style={{ height: '50px', width: 'auto', paddingRight: '0.5rem' }} />
+      <img src="./logo.svg" alt="AGS Logo" style={{ height: '50px', width: 'auto', paddingRight: '0.5rem' }} />
       <span className="logo-text">AGS <span className="text-accent">HR</span></span>
     </Link>
   );
@@ -1023,7 +1023,7 @@ const Footer = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '3rem', marginBottom: '4rem' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '2rem' }}>
-              <img src="/logo.svg" alt="AGS Logo" style={{ height: '40px', width: 'auto', paddingRight: '0.5rem' }} />
+              <img src="./logo.svg" alt="AGS Logo" style={{ height: '40px', width: 'auto', paddingRight: '0.5rem' }} />
               <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--primary)', marginLeft: '-8px' }}>
                 <span className="logo-text">AGS <span className="text-accent">HR</span></span>
               </span>
