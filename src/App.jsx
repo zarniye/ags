@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import heroImg from './assets/hero.png'
 import consultantImg from './assets/consultant.png'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 import './App.css'
 import { 
   Users, 
@@ -28,9 +30,25 @@ import {
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+
+      // Section scroll spy
+      const sections = ['home', 'services', 'about', 'values', 'process', 'testimonials', 'faq', 'careers', 'contact'];
+      for (const section of sections) {
+        const el = document.getElementById(section);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 200 && rect.bottom >= 200) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
+    };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -45,7 +63,7 @@ const Header = () => {
 
         <nav className="nav-links">
           {['Home', 'Services', 'About', 'Careers', 'Contact'].map((item) => (
-            <a key={item} href={`#${item.toLowerCase()}`} className="nav-link">
+            <a key={item} href={`#${item.toLowerCase()}`} className={`nav-link ${activeSection === item.toLowerCase() ? 'active' : ''}`}>
               {item}
             </a>
           ))}
@@ -53,7 +71,7 @@ const Header = () => {
         </nav>
 
         <button className="mobile-toggle" onClick={() => setIsMobileMenuOpen(true)}>
-          <Menu />
+          <Menu size={28} />
         </button>
       </div>
 
@@ -109,7 +127,7 @@ const Header = () => {
                     fontSize: '2rem', 
                     fontWeight: '700', 
                     padding: '1rem 0',
-                    color: 'var(--text-main)',
+                    color: activeSection === item.toLowerCase() ? 'var(--primary)' : 'var(--text-main)',
                     display: 'block',
                     borderBottom: '1px solid var(--bg-soft)'
                   }} 
@@ -216,16 +234,28 @@ const Services = () => {
   return (
     <section id="services" className="section" style={{ background: '#f8fafc', overflow: 'hidden' }}>
       <div className="container">
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }} data-aos="fade-up">
           <span className="badge">Our Expertise</span>
           <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Tailored HR Solutions</h2>
           <p style={{ color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>We provide a comprehensive suite of HR services designed to help you attract and retain the best talent.</p>
         </div>
 
-        <div className="carousel-container">
+        <div className="carousel-container" data-aos="fade-up" data-aos-delay="200">
           <button className="carousel-btn prev desktop-only" onClick={prev}><ChevronLeft /></button>
           
-          <div className="carousel-window">
+          <div 
+            className="carousel-window"
+            onScroll={(e) => {
+              if (window.innerWidth <= 768) {
+                // Calculate which card is focused based on scroll position and card width (approx 85vw)
+                const cardWidth = e.target.offsetWidth * 0.85;
+                const newIndex = Math.round(e.target.scrollLeft / cardWidth);
+                if (newIndex !== index) {
+                  setIndex(newIndex);
+                }
+              }
+            }}
+          >
             <motion.div 
               className="carousel-track" 
               animate={window.innerWidth > 768 ? { x: `-${index * (100 / displayCount)}%` } : {}}
@@ -268,18 +298,18 @@ const About = () => {
     <section id="about" className="section">
       <div className="container">
         <div className="about-grid">
-          <div className="about-image-container">
+          <div className="about-image-container" data-aos="fade-right">
             <div className="about-image">
               <img src={consultantImg} alt="Business consultant" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0, 74, 173, 0.4), transparent)' }}></div>
+              <div className="about-image-overlay"></div>
             </div>
-            <div className="about-stats">
+            <div className="about-stats" data-aos="zoom-in" data-aos-delay="400">
               <span style={{ fontSize: '3rem', fontWeight: 'bold', color: '#004aad', display: 'block' }}>15+</span>
               <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#64748b', textTransform: 'uppercase' }}>Years of Excellence</span>
             </div>
           </div>
 
-          <div>
+          <div data-aos="fade-left">
             <span className="badge">About AGS HR</span>
             <h2 style={{ fontSize: '3rem', marginBottom: '2rem' }}>Bridging the Gap Between <span style={{ color: '#ea2e2e' }}>Talent</span> and Opportunity</h2>
             <p style={{ fontSize: '1.1rem', color: '#64748b', marginBottom: '2rem' }}>Founded on integrity and expertise, AGS HR has evolved into a premier recruitment firm. We believe a company's greatest asset is its people.</p>
@@ -309,13 +339,13 @@ const Values = () => {
   return (
     <section id="values" className="section" style={{ background: '#fff' }}>
       <div className="container">
-        <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '5rem' }} data-aos="fade-up">
           <span className="badge">Our Core Values</span>
           <h2 style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>The Foundation of <br />Our Excellence</h2>
         </div>
         <div className="values-grid">
           {values.map((v, idx) => (
-            <div key={idx} className="value-card">
+            <div key={idx} className="value-card" data-aos="fade-up" data-aos-delay={idx * 150}>
               <div className="value-icon">{v.icon}</div>
               <h3 style={{ marginBottom: '1.2rem' }}>{v.title}</h3>
               <p style={{ color: '#64748b' }}>{v.desc}</p>
@@ -338,14 +368,14 @@ const Process = () => {
   return (
     <section id="process" className="section" style={{ background: '#f8fafc' }}>
       <div className="container">
-        <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '5rem' }} data-aos="zoom-in">
           <span className="badge">How We Work</span>
           <h2 style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Our Proven Process</h2>
           <p style={{ color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>A streamlined journey from identifying needs to successful integration.</p>
         </div>
         <div className="process-timeline">
           {steps.map((step, idx) => (
-            <div key={idx} className="process-step">
+            <div key={idx} className="process-step" data-aos="fade-up" data-aos-delay={idx * 200}>
               <div className="step-number">{step.number}</div>
               <h3 style={{ marginBottom: '1rem', marginTop: '1rem' }}>{step.title}</h3>
               <p style={{ color: '#64748b', fontSize: '0.95rem' }}>{step.desc}</p>
@@ -382,13 +412,13 @@ const Testimonials = () => {
   return (
     <section id="testimonials" className="section">
       <div className="container">
-        <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '5rem' }} data-aos="fade-up">
           <span className="badge">Client Success</span>
           <h2 style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Voices of Trust</h2>
         </div>
         <div className="testimonial-grid">
           {reviews.map((r, idx) => (
-            <div key={idx} className="testimonial-card">
+            <div key={idx} className="testimonial-card" data-aos="zoom-in-up" data-aos-delay={idx * 150}>
               <p className="testimonial-content">"{r.text}"</p>
               <div className="testimonial-author">
                 <img src={r.image} alt={r.author} className="author-img" />
@@ -423,11 +453,11 @@ const FAQ = () => {
   return (
     <section id="faq" className="section" style={{ background: '#fff' }}>
       <div className="container">
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '4rem' }} data-aos="fade-up">
           <span className="badge">Questions?</span>
           <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Frequently Asked Questions</h2>
         </div>
-        <div className="faq-list">
+        <div className="faq-list" data-aos="fade-up" data-aos-delay="200">
           {faqs.map((item, idx) => (
             <div key={idx} className="faq-item">
               <button className="faq-question" onClick={() => setOpenIdx(openIdx === idx ? -1 : idx)}>
@@ -470,7 +500,7 @@ const Careers = () => {
   return (
     <section id="careers" className="section">
       <div className="container">
-        <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '5rem' }} data-aos="fade-up">
           <span className="badge">Join Our Team</span>
           <h2 style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Build Your Career with <span style={{ color: '#004aad' }}>AGS HR</span></h2>
           <p style={{ color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>We're looking for passionate individuals to help us bridge the gap between global talent and opportunity.</p>
@@ -478,7 +508,7 @@ const Careers = () => {
 
         <div className="jobs-list">
           {jobs.map((job, idx) => (
-            <div key={idx} className="job-card">
+            <div key={idx} className="job-card" data-aos="fade-up" data-aos-delay={idx * 100}>
               <div className="job-info">
                 <h3>{job.title}</h3>
                 <div className="job-meta">
@@ -492,7 +522,7 @@ const Careers = () => {
           ))}
         </div>
 
-        <div className="talent-pool-cta">
+        <div className="talent-pool-cta" data-aos="zoom-in" data-aos-delay="200">
           <h3>Don't see a role for you?</h3>
           <p>Join our talent network to stay updated on future opportunities.</p>
           <button className="btn btn-primary">Join Talent Pool</button>
@@ -507,7 +537,7 @@ const Contact = () => {
     <section id="contact" className="section contact">
       <div className="container">
         <div className="contact-grid">
-          <div>
+          <div data-aos="fade-right">
             <span className="badge" style={{ background: 'rgba(234, 46, 46, 0.2)', color: '#ff5f5f' }}>Contact Us</span>
             <h2 style={{ fontSize: '3rem', marginBottom: '2rem' }}>Ready to Transform Your Workforce?</h2>
             <p style={{ color: '#94a3b8', fontSize: '1.1rem', marginBottom: '3rem' }}>Our team is ready to help you navigate modern HR complexities.</p>
@@ -524,7 +554,7 @@ const Contact = () => {
             </div>
           </div>
 
-          <div className="contact-form">
+          <div className="contact-form" data-aos="fade-left" data-aos-delay="200">
             <div className="form-group"><label>Full Name</label><input className="form-input" placeholder="John Doe" /></div>
             <div className="form-group"><label>Email</label><input className="form-input" placeholder="john@example.com" /></div>
             <div className="form-group"><label>Message</label><textarea className="form-input" rows="4" placeholder="How can we help?"></textarea></div>
@@ -560,6 +590,15 @@ const Footer = () => {
 };
 
 function App() {
+  useEffect(() => {
+    AOS.init({
+      duration: 1500,
+      once: false,
+      offset: 100,
+      easing: 'ease-out-cubic',
+    });
+  }, []);
+
   return (
     <div className="app-root">
       <Header />
