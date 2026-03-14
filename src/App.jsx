@@ -102,7 +102,20 @@ const Header = () => {
               {item.label}
             </NavLink>
           ))}
-          <button className="btn btn-primary" style={{ padding: '0.6rem 1.5rem', fontSize: '0.85rem' }}>Get Talented</button>
+          <button 
+            className="btn btn-primary" 
+            style={{ padding: '0.6rem 1.5rem', fontSize: '0.85rem' }}
+            onClick={() => {
+              const contactSection = document.getElementById('contact');
+              if (contactSection) {
+                contactSection.scrollIntoView({ behavior: 'smooth' });
+              } else {
+                window.location.hash = '/contact';
+              }
+            }}
+          >
+            Get Talented
+          </button>
         </nav>
 
         <button className="mobile-toggle" onClick={() => setIsMobileMenuOpen(true)}>
@@ -177,7 +190,19 @@ const Header = () => {
             </div>
 
             <div style={{ marginTop: 'auto', paddingTop: '4rem' }}>
-              <button className="btn btn-primary w-full" style={{ justifyContent: 'center', padding: '1.25rem' }}>
+              <button 
+                className="btn btn-primary w-full" 
+                style={{ justifyContent: 'center', padding: '1.25rem' }}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  const contactSection = document.getElementById('contact');
+                  if (contactSection) {
+                    contactSection.scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    window.location.hash = '/contact';
+                  }
+                }}
+              >
                 Get Talented
               </button>
             </div>
@@ -360,18 +385,108 @@ const EngagementModels = () => {
   );
 };
 
-const Services = () => {
+const SERVICES_DATA = [
+  { 
+    id: 'executive',
+    title: "Executive Recruitment", 
+    desc: "Finding high-level leaders who drive your company's mission forward.", 
+    detail: "Our executive search process is discreet and thorough. We identify, engage, and vet C-suite and senior leadership talent through a customized strategy that looks beyond the resume to evaluate cultural alignment and strategic vision.",
+    icon: <Users />,
+    benefits: ["Bespoke headhunting", "Full candidate profiling", "90-day retention guarantee"]
+  },
+  { 
+    id: 'permanent',
+    title: "Permanent Staffing", 
+    desc: "Building stable, long-term teams with candidates that fit your culture.", 
+    detail: "We specialize in finding candidates who are looking for their next career home. Our proprietary 'Synergy-Vetting' system ensures that every placement is technically sound and has high long-term potential within your organization.",
+    icon: <Briefcase />,
+    benefits: ["Culture-fit matching", "Technical assessment", "Direct-hire solutions"]
+  },
+  { 
+    id: 'consulting',
+    title: "HR Consulting", 
+    desc: "Strategic advice on workforce planning, policy, and compliance.", 
+    detail: "Modern HR is complex. Our consultants provide expert guidance on labor laws, performance management systems, and organizational design, helping you build a compliant and high-functioning workplace.",
+    icon: <Target />,
+    benefits: ["Compliance audits", "Policy development", "Workforce planning"]
+  },
+  { 
+    id: 'payroll',
+    title: "Payroll Management", 
+    desc: "Streamlined solutions for hassle-free payroll and taxation.", 
+    detail: "Focus on your core business while we handle the complexities of payroll, benefits administration, and multi-currency taxation. Our system is accurate, secure, and always on time.",
+    icon: <Award />,
+    benefits: ["Tax compliance", "Benefits administration", "Cloud-based portal"]
+  },
+  { 
+    id: 'training',
+    title: "Training & Dev", 
+    desc: "Empowering your employees with modern skillsets and leadership training.", 
+    detail: "Investment in your people is an investment in your success. We offer curated training modules in leadership, soft skills, and specific technical domains to keep your workforce competitive.",
+    icon: <CheckCircle2 />,
+    benefits: ["Leadership workshops", "Skill-gap analysis", "Custom modules"]
+  },
+  { 
+    id: 'global',
+    title: "Global Mobility", 
+    desc: "Seamless cross-border staffing and relocation services.", 
+    detail: "Expanding internationally requires specialized knowledge. We handle work permits, relocation logistics, and international candidate sourcing to make your global expansion as smooth as possible.",
+    icon: <Globe />,
+    benefits: ["Visa sponsorship help", "Relocation support", "Global network access"]
+  }
+];
+
+const ServiceDetailModal = ({ service, isOpen, onClose }) => {
+  if (!service) return null;
+  return (
+    <AnimatePresence mode="wait">
+      {isOpen && (
+        <motion.div 
+          className="modal-overlay"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+        >
+          <motion.div 
+            className="modal-content service-detail-modal"
+            initial={{ scale: 0.9, y: 20, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            exit={{ scale: 0.9, y: 20, opacity: 0 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="modal-close" onClick={onClose}><X size={24} /></button>
+            <div className="service-modal-header">
+              <div className="modal-service-icon">{service.icon}</div>
+              <h2>{service.title}</h2>
+            </div>
+            <div className="service-modal-body">
+              <p className="service-main-detail">{service.detail}</p>
+              <div className="service-benefits">
+                <h3>Key Benefits</h3>
+                <ul>
+                  {service.benefits.map((b, i) => (
+                    <li key={i}><CheckCircle2 size={16} /> {b}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <div className="modal-cta">
+              <Link to="/contact" className="btn btn-primary w-full" style={{ justifyContent: 'center' }} onClick={onClose}>
+                Inquire About This Service
+              </Link>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const Services = ({ onOpenService }) => {
   const [index, setIndex] = useState(0);
   const [displayCount, setDisplayCount] = useState(3);
-
-  const services = [
-    { title: "Executive Recruitment", desc: "Finding high-level leaders who drive your company's mission forward.", icon: <Users /> },
-    { title: "Permanent Staffing", desc: "Building stable, long-term teams with candidates that fit your culture.", icon: <Briefcase /> },
-    { title: "HR Consulting", desc: "Strategic advice on workforce planning, policy, and compliance.", icon: <Target /> },
-    { title: "Payroll Management", desc: "Streamlined solutions for hassle-free payroll and taxation.", icon: <Award /> },
-    { title: "Training & Dev", desc: "Empowering your employees with modern skillsets and leadership training.", icon: <CheckCircle2 /> },
-    { title: "Global Mobility", desc: "Seamless cross-border staffing and relocation services.", icon: <Globe /> }
-  ];
+  const services = SERVICES_DATA;
 
   useEffect(() => {
     const handleResize = () => {
@@ -419,14 +534,19 @@ const Services = () => {
             >
               {services.map((s, idx) => (
                 <div key={idx} className="carousel-card-wrapper" style={{ minWidth: window.innerWidth > 768 ? `${100 / displayCount}%` : '85%', padding: '0 0.75rem' }}>
-                  <div className="service-card">
-                    <div className="icon-box" style={{ width: '56px', height: '56px', marginBottom: '1.5rem', color: idx % 2 === 0 ? '#004aad' : '#ea2e2e' }}>{s.icon}</div>
-                    <h3 style={{ marginBottom: '0.75rem', fontSize: '1.25rem' }}>{s.title}</h3>
-                    <p style={{ color: '#64748b', marginBottom: '1.5rem', fontSize: '0.95rem', lineHeight: '1.5' }}>{s.desc}</p>
-                    <a href="#" style={{ fontWeight: 'bold', color: '#004aad', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
-                      Learn More <ChevronRight size={14} />
-                    </a>
-                  </div>
+                    <button 
+                      onClick={() => onOpenService(s)}
+                      style={{ background: 'none', border: 'none', padding: 0, textAlign: 'left', cursor: 'pointer', display: 'block', width: '100%' }}
+                    >
+                      <div className="service-card">
+                        <div className="icon-box" style={{ width: '56px', height: '56px', marginBottom: '1.5rem', color: idx % 2 === 0 ? '#004aad' : '#ea2e2e' }}>{s.icon}</div>
+                        <h3 style={{ marginBottom: '0.75rem', fontSize: '1.25rem' }}>{s.title}</h3>
+                        <p style={{ color: '#64748b', marginBottom: '1.5rem', fontSize: '0.95rem', lineHeight: '1.5' }}>{s.desc}</p>
+                        <div style={{ fontWeight: 'bold', color: '#004aad', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
+                          Learn More <ChevronRight size={14} />
+                        </div>
+                      </div>
+                    </button>
                 </div>
               ))}
             </motion.div>
@@ -477,7 +597,17 @@ const About = () => {
                 </div>
               ))}
             </div>
-            <button className="btn btn-primary">Learn Our Story</button>
+            <button 
+              className="btn btn-primary"
+              onClick={() => {
+                const valuesSection = document.getElementById('values');
+                if (valuesSection) {
+                  valuesSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+            >
+              Learn Our Story
+            </button>
           </div>
         </div>
       </div>
@@ -819,6 +949,33 @@ const RelatedCompanies = ({ onOpenProfile }) => {
 };
 
 const Contact = () => {
+  const [status, setStatus] = useState('idle'); // idle, sending, success
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setStatus('sending');
+    setTimeout(() => {
+      setStatus('success');
+    }, 2000);
+  };
+
+  if (status === 'success') {
+    return (
+      <section id="contact" className="section contact">
+        <div className="container" style={{ textAlign: 'center', padding: '100px 0' }}>
+          <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
+            <div style={{ width: '80px', height: '80px', background: '#22c55e20', color: '#22c55e', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem' }}>
+              <CheckCircle2 size={40} />
+            </div>
+            <h2 style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Message Sent!</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem', marginBottom: '3rem' }}>Thank you for reaching out. Our team will get back to you within 24 hours.</p>
+            <button className="btn btn-primary" onClick={() => setStatus('idle')}>Send Another Message</button>
+          </motion.div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="contact" className="section contact">
       <div className="container">
@@ -831,7 +988,7 @@ const Contact = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               <div style={{ display: 'flex', gap: '1.5rem' }}>
                 <div style={{ width: '56px', height: '56px', background: 'white', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', color: 'var(--primary)' }}><Phone style={{ margin: 'auto' }} /></div>
-                <div><h4 style={{ marginBottom: '0.25rem' }}>Call Us</h4><p style={{ color: 'var(--text-muted)' }}>+95 (9) 000-0000</p></div>
+                <div><h4 style={{ marginBottom: '0.25rem' }}>Call Us</h4><p style={{ color: 'var(--text-muted)' }}>+95 9 123 456 789</p></div>
               </div>
               <div style={{ display: 'flex', gap: '1.5rem' }}>
                 <div style={{ width: '56px', height: '56px', background: 'white', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', color: 'var(--primary)' }}><Mail style={{ margin: 'auto' }} /></div>
@@ -840,14 +997,19 @@ const Contact = () => {
             </div>
           </div>
 
-          <div className="contact-form" data-aos="fade-left" data-aos-delay="200">
-            <div className="form-group"><label>Full Name</label><input className="form-input" placeholder="John Doe" /></div>
-            <div className="form-group"><label>Email</label><input className="form-input" placeholder="john@example.com" /></div>
-            <div className="form-group"><label>Message</label><textarea className="form-input" rows="4" placeholder="How can we help?"></textarea></div>
-            <button className="btn btn-primary w-full btn-send" style={{ padding: '0.6rem', justifyContent: 'center' }}>
-              Send Message <ArrowRight size={20} />
+          <form className="contact-form" data-aos="fade-left" data-aos-delay="200" onSubmit={handleSubmit}>
+            <div className="form-group"><label>Full Name</label><input className="form-input" required placeholder="John Doe" /></div>
+            <div className="form-group"><label>Email</label><input type="email" className="form-input" required placeholder="john@example.com" /></div>
+            <div className="form-group"><label>Message</label><textarea className="form-input" required rows="4" placeholder="How can we help?"></textarea></div>
+            <button 
+              type="submit" 
+              className="btn btn-primary w-full btn-send" 
+              style={{ padding: '0.6rem', justifyContent: 'center' }}
+              disabled={status === 'sending'}
+            >
+              {status === 'sending' ? 'Sending...' : 'Send Message'} <ArrowRight size={20} />
             </button>
-          </div>
+          </form>
         </div>
       </div>
     </section>
@@ -870,9 +1032,9 @@ const Footer = () => {
               Leading HR consulting firm specializing in global recruitment and executive search since 2011.
             </p>
             <div style={{ display: 'flex', gap: '1rem' }}>
-              <a href="#" style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', transition: 'var(--transition)' }}><Facebook size={18} /></a>
-              <a href="#" style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', transition: 'var(--transition)' }}><Linkedin size={18} /></a>
-              <a href="#" style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', transition: 'var(--transition)' }}><Twitter size={18} /></a>
+              <a href="https://facebook.com/agshr" target="_blank" rel="noopener noreferrer" style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', transition: 'var(--transition)' }}><Facebook size={18} /></a>
+              <a href="https://linkedin.com/company/agshr" target="_blank" rel="noopener noreferrer" style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', transition: 'var(--transition)' }}><Linkedin size={18} /></a>
+              <a href="https://twitter.com/agshr" target="_blank" rel="noopener noreferrer" style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', transition: 'var(--transition)' }}><Twitter size={18} /></a>
             </div>
           </div>
 
@@ -1001,6 +1163,7 @@ const GlobalPresence = () => {
 
 function App() {
   const [selectedProfile, setSelectedProfile] = useState(null);
+  const [selectedService, setSelectedService] = useState(null);
 
   useEffect(() => {
     AOS.init({
@@ -1027,7 +1190,7 @@ function App() {
             } />
             <Route path="/services" element={
               <>
-                <Services />
+                <Services onOpenService={setSelectedService} />
                 <EngagementModels />
               </>
             } />
@@ -1063,6 +1226,12 @@ function App() {
             onClose={() => setSelectedProfile(null)}
           />
         )}
+
+        <ServiceDetailModal 
+          service={selectedService}
+          isOpen={!!selectedService}
+          onClose={() => setSelectedService(null)}
+        />
       </div>
     </Router>
   );
